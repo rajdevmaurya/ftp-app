@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
-  private final Path root = Paths.get("./uploads");
+  private final Path root = Paths.get("../uploads");
 
   @Override
   public void init() {
@@ -75,6 +75,15 @@ public class FilesStorageServiceImpl implements FilesStorageService {
   public Stream<Path> loadAll() {
     try {
       return Files.walk(this.root, 1).filter(path -> !path.equals(this.root)).map(this.root::relativize);
+    } catch (IOException e) {
+      throw new RuntimeException("Could not load the files!");
+    }
+  }
+  
+  @Override
+  public Stream<Path> loadUploadedFiles() {
+    try {
+      return Files.walk(this.root, 1).filter(path -> !path.equals(this.root));
     } catch (IOException e) {
       throw new RuntimeException("Could not load the files!");
     }

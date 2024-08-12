@@ -1,11 +1,9 @@
 package com.demo.ftp.upload.controller;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -107,19 +105,18 @@ public class FileController {
   }
   
   @PostMapping("/sftp")
-  public String sftpFile(Model model, RedirectAttributes redirectAttributes) {
-    List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
-      String filename = path.getFileName().toString();
-      String fpath= path.toAbsolutePath().toString();
-     // String url = MvcUriComponentsBuilder
-        //  .fromMethodName(FileController.class, "getFile", path.getFileName().toString()).build().toString();
+	public String sftpFile(Model model, @RequestParam("environment") String environment,@RequestParam("teamName") String teamName, RedirectAttributes redirectAttributes) {
+		List<FileInfo> fileInfos = storageService.loadUploadedFiles().map(path -> {
+			String filename = path.getFileName().toString();
+			System.out.println(filename);
+			String fpath = path.toAbsolutePath().toString();
+			System.out.println(fpath);
+			return new FileInfo(filename, fpath);
+		}).collect(Collectors.toList());
+		sftpService.transferFile(fileInfos);
+		redirectAttributes.addFlashAttribute("message", "File upload is in-progress wait for some time!");
+		// System.out.println(fileInfos);
 
-      return new FileInfo(filename, fpath);
-    }).collect(Collectors.toList());
-    sftpService.transferFile(fileInfos);
-    redirectAttributes.addFlashAttribute("message", "File upload is in-progress wait for some time!");
-    System.out.println(fileInfos);
-
-    return "redirect:/files";
-  }
+		return "redirect:/files";
+	}
 }

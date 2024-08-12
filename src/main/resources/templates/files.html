@@ -21,6 +21,18 @@
     <h2 class="text-center">List of Files</h2>
     <div  th:if="${files.size() > 0}">
 	 <form id="sftp" method="post" th:action="@{/sftp}">
+				<select id="environment" name="environment" required>
+					<option value="" selected>Environment</option>
+					<option value="System">System</option>
+					<option value="UAT">UAT</option>
+					<option value="PROD">PROD</option>
+				</select>
+				<select id="teamName" name="teamName" required>
+					<option value="" selected>Team Name</option>
+					<option value="ATeam">ATeam</option>
+					<option value="BTeam">BTeam</option>
+					<option value="CTeam">CTeam</option>
+				</select>
       <button class="btn btn-sm btn-outline-success float-right" type="submit" th:attr="disabled=${message == 'File upload is in-progress wait for some time!'}">
         SFTP
       </button>
