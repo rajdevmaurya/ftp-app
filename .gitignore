@@ -32,3 +32,6 @@ build/tmp/jar/MANIFEST.MF
 .gradle/buildOutputCleanup/buildOutputCleanup.lock
 .gradle/buildOutputCleanup/cache.properties
 .gradle/file-system.probe
+.gradle/buildOutputCleanup/cache.properties
+*.lock
+/.gradle

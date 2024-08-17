@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.apache.commons:commons-vfs2:2.9.0'
     implementation 'org.apache.sshd:sshd-sftp:2.9.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'com.jcraft:jsch:0.1.55'
 }
 
 tasks.withType(Test) {
