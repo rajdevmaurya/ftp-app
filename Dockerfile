@@ -27,4 +27,4 @@ COPY --from=build /app/build/libs/ftp-app-0.0.1-SNAPSHOT.jar /app/ftp-app.jar
 EXPOSE 80
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "/app/ftp-app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/ftp-app.jar","--server.port=80"]
