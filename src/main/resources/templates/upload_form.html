@@ -3,38 +3,46 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
-  <title>Thymeleaf Multiple File Upload example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+  <title>Thymeleaf Multiple File Upload Example</title>
   <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
   <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
   <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
 </head>
 
 <body>
   <div th:replace="fragments/header :: header"></div>
+<main>
+	
+	 <section class="section upload-files-section">
 
-  <div class="container" style="max-width: 550px">
-    <h3 class="mb-3">File Upload</h3>
+  <div class="container boxed-container">
+  
+   <div class="upload-files-form">
+     <h2 class="section-heading text-center border-bottom pb-4 mb-0">File Upload</h2>
 
-    <form
-      id="uploadForm"
-      method="post"
-      th:action="@{/files/upload}"
-      enctype="multipart/form-data">
-      <input type="file" multiple name="files" />
-      <button class="btn btn-sm btn-outline-success float-right" type="submit">
-        Upload
-      </button>
-    </form>
+    <div class="form-container border-top pt-4">
+      <form id="uploadForm" method="post" th:action="@{/files/upload}" enctype="multipart/form-data">
+		   <div class="border p-3 rounded-sm mb-4">
+        <input type="file" multiple name="files" />
+		   </div>
+        <button class="button outlined-primary d-block w-100 text-uppercase" type="submit">
+          Upload
+        </button>
+      </form>
+    </div>
 
-    <div th:if="${messages != null}" class="alert alert-secondary alert-dismissible fade show message mt-3" role="alert">
-      <div th:each="message : ${messages}">[[${message}]]</div>
+    <div  th:if="${messages != null}" class="alert alert-secondary alert-dismissible fade show message mt-3 uploaded-files" role="alert">
+      <p th:each="message : ${messages}">[[${message}]]</p>
       <button type="button" class="close btn-sm" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
   </div>
-
+  </div>
+	 </section>
+</main>
   <div th:replace="fragments/footer :: footer"></div>
 </body>
 
