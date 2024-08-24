@@ -35,3 +35,7 @@ build/tmp/jar/MANIFEST.MF
 .gradle/buildOutputCleanup/cache.properties
 *.lock
 /.gradle
+/.gradle
+.gradle/8.2.1/executionHistory/executionHistory.bin
+.gradle/8.2.1/fileHashes/fileHashes.bin
+/.gradle/8.2.1/fileHashes
