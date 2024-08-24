@@ -24,7 +24,7 @@ WORKDIR /app
 COPY --from=build /app/build/libs/ftp-app-0.0.1-SNAPSHOT.jar /app/ftp-app.jar
 
 # Expose port 8080
-EXPOSE 80
+EXPOSE 8080
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "/app/ftp-app.jar","--server.port=80"]
+ENTRYPOINT ["java", "-jar", "/app/ftp-app.jar"]
