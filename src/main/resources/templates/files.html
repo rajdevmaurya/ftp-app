@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
@@ -12,141 +13,116 @@
   <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
   <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
   <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
-  
-  <style>
-    /* Add custom styles for disabled SFTP button */
-    .disabled-button {
-      background-color: grey;
-      color: white;
-      cursor: not-allowed;
-    }
-
-    /* Style for the label message */
-    .wait-message {
-      color: red;
-      font-weight: bold;
-      display: none; /* Initially hidden */
-    }
-  </style>
 </head>
 
 <body>
   <div th:replace="fragments/header :: header"></div>
-  <main>
-    <section class="section files-section">
-      <div class="container boxed-container">
-        <h2 class="section-heading text-center border-bottom pb-4 mb-0">List of Files</h2>
-        <div class="files-container border-top pt-4" th:if="${files.size() > 0}">
-          <form id="sftp" method="post" th:action="@{/sftp}" class="mb-3 d-flex flex-wrap align-items-end justify-content-between">
-            <label for="environment">
-              <select id="environment" name="environment" required>
-                <option value="" selected>Environment</option>
-                <option value="System">System</option>
-                <option value="UAT">UAT</option>
-                <option value="PROD">PROD</option>
-              </select>
-            </label>
-            <label for="teamNames">
-              <select id="teamName" name="teamName" required>
-                <option value="" selected>Team Name</option>
-                <option value="ATeam">ATeam</option>
-                <option value="BTeam">BTeam</option>
-                <option value="CTeam">CTeam</option>
-              </select>
-            </label>
-            <label for="testName">
-              <select id="testName" name="testName" required>
-                <option value="" selected>Test Name</option>
-                <option value="ATeam">ATeam</option>
-                <option value="BTeam">BTeam</option>
-                <option value="CTeam">CTeam</option>
-              </select>
-            </label>
-            <button id="sftpButton" class="button outlined-primary" type="submit"
-              th:attr="disabled=${message == 'File upload is in-progress wait for some time!'}">
-              SFTP
-            </button>
-          </form>
+<main>
+	  <section class="section files-section">
+   <div class="container boxed-container">
+      <h2 class="section-heading text-center border-bottom pb-4 mb-0">List of Files</h2>
+    <div class="files-container border-top pt-4" th:if="${files.size() > 0}">
+      <form id="sftp" method="post" th:action="@{/sftp}" class="mb-3 d-flex flex-wrap align-items-end justify-content-between">
+		<label for="environment">
+        <select id="environment" name="environment" required>
+          <option value="" selected>Environment</option>
+          <option value="System">System</option>
+          <option value="UAT">UAT</option>
+          <option value="PROD">PROD</option>
+        </select>
+		</label>
+		 <label for="teamNames">
+        <select id="teamName" name="teamName" required>
+          <option value="" selected>Team Name</option>
+          <option value="ATeam">ATeam</option>
+          <option value="BTeam">BTeam</option>
+          <option value="CTeam">CTeam</option>
+        </select>
+		 </label>
+		  <label for="testName">
+        <select id="testName" name="testName" required>
+          <option value="" selected>Test Name</option>
+          <option value="ATeam">ATeam</option>
+          <option value="BTeam">BTeam</option>
+          <option value="CTeam">CTeam</option>
+        </select>
+		  </label>
+        <button class="button outlined-primary" type="submit" th:attr="disabled=${message == 'File upload is in-progress wait for some time!'}">
+          SFTP
+        </button>
+      </form>
+    </div>
+    
+    <div th:if="${message}" th:text="${message}"></div>
+    <div th:if="${files.size() > 0}">
+	<div class="table-responsive">
+        <table id="uploaded-files-table" class="table table-striped table-bordered mb-0">
+        <thead>
+          <tr>
+              <th scope="col">File Name</th>
+                <th scope="col" class="text-center">Link</th>
+                <th scope="col" class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="file : ${files}">
+            <td>[[${file.name}]]</td>
+            <td class="text-center" ><a  title="Download" class="text-info" th:href="@{${file.url}}"> <i class="fa fa-download"></i></a></td>
+            <td class="text-center">
+              <a th:href="@{'/files/delete/' + ${file.name}}" th:fileName="${file.name}" id="btnDelete"
+                title="Delete this file" class="icon-dark btn-delete text-danger text-cente"> <i class="fa-regular fa-trash-can"></i></a>
+            </td>
+          </tr>
+        </tbody>
+        
+      </table>
+	</div>
+    </div>
 
-          <!-- Wait message label -->
-          <div id="waitMessage" class="wait-message">Wait for some time, file upload is in-progress!</div>
+    <div th:unless="${files.size() > 0}">
+      <span>No files found!</span>
+    </div>
+  </div>
+
+  <div class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Confirmation</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
 
-        <div th:if="${message}" th:text="${message}"></div>
-        <div th:if="${files.size() > 0}">
-          <div class="table-responsive">
-            <table id="uploaded-files-table" class="table table-striped table-bordered mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">File Name</th>
-                  <th scope="col" class="text-center">Link</th>
-                  <th scope="col" class="text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr th:each="file : ${files}">
-                  <td>[[${file.name}]]</td>
-                  <td class="text-center"><a title="Download" class="text-info" th:href="@{${file.url}}"> <i class="fa fa-download"></i></a></td>
-                  <td class="text-center">
-                    <a th:href="@{'/files/delete/' + ${file.name}}" th:fileName="${file.name}" id="btnDelete"
-                      title="Delete this file" class="icon-dark btn-delete text-danger text-center"> <i class="fa-regular fa-trash-can"></i></a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="modal-body">
+          <span id="confirmText"></span>
         </div>
 
-        <div th:unless="${files.size() > 0}">
-          <span>No files found!</span>
-        </div>
-      </div>
-
-      <div class="modal fade text-center" id="confirmModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Delete Confirmation</h5>
-              <button type="button" class="close" data-dismiss="modal">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-
-            <div class="modal-body">
-              <span id="confirmText"></span>
-            </div>
-
-            <div class="modal-footer">
-              <a type="button" id="yesBtn" class="btn btn-danger">Yes</a>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-            </div>
-          </div>
+        <div class="modal-footer">
+          <a type="button" id="yesBtn" class="btn btn-danger">Yes</a>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
+</section>
+</main>
   <div th:replace="fragments/footer :: footer"></div>
 
   <script type="text/javascript">
     $(document).ready(function () {
-      // Delete button confirmation
       $(".btn-delete").on("click", function (e) {
         e.preventDefault();
-        let link = $(this);
-        let fileName = link.attr("fileName");
+        link = $(this);
+
+        fileName = link.attr("fileName");
         $("#yesBtn").attr("href", link.attr("href"));
-        $("#confirmText").html("Do you want to delete the File: <strong>" + fileName + "</strong>?");
+        $("#confirmText").html("Do you want to delete the File: \<strong\>" + fileName + "\<\/strong\>?");
         $("#confirmModal").modal();
       });
-
-      // Change the SFTP button color to grey if disabled and show the wait message
-      let sftpButton = $("#sftpButton");
-      if (sftpButton.is(":disabled")) {
-        sftpButton.addClass("disabled-button");
-        $("#waitMessage").show(); // Show the wait message when the button is disabled
-      }
     });
   </script>
 
 </body>
+
 </html>
